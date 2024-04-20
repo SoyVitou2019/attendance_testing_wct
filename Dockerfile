@@ -25,8 +25,8 @@ COPY --from=composer:2.3.5 /usr/bin/composer /usr/bin/composer
 ENV PORT=8100
 
 # Set entrypoint script
-RUN chmod +x docker/entrypoint.sh
-ENTRYPOINT ["/docker/entrypoint.sh"]
+RUN chmod +x entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
 
 # ==============================================================================
 # Node.js Service
