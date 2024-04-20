@@ -21,7 +21,7 @@ class EmployeeController extends Controller
         }
 
         return view('employee.crud_employee', [
-            'employees' => $employees->paginate(8),
+            'employees' => $employees->paginate(6),
             'shifts' => Shift::orderBy('id')->get(),
             'positions' => Position::orderBy('id')->get(),
         ]);

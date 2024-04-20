@@ -83,25 +83,27 @@
                             </a>
                         </div>
 
-                        <!-- Emp Att Card  -->
+                        <!-- Attendance Card  -->
 
                         <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card h-100">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col me-2">
-                                            <div class="text-xs font-weight-bold text-uppercase mb-1">Employee Attendaces
+                            <a href="/display/attendances" type="button" class="w-100 text-decoration-none ">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col me-2">
+                                                <div class="text-xs font-weight-bold text-uppercase mb-1">Employee Attendances
+                                                </div>
+                                                <div class="fs-4 font-weight-bold ">
+                                                    {{ (new App\Models\Attendance())->getTotalAttendance() }}
+                                                </div>
                                             </div>
-                                            <div class="fs-4 font-weight-bold ">
-                                                {{-- add data here --}}
+                                            <div class="col-auto">
+                                                <i class="fas fa-calendar fa-2x text-secondary-emphasis"></i>
                                             </div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-calendar fa-2x text-secondary-emphasis"></i>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </a>
                         </div>
 
 

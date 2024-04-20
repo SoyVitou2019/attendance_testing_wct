@@ -3,6 +3,7 @@
 use App\Http\Controllers\EmployeeCrudController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PositionController;
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\ShiftController;
 use Illuminate\Support\Facades\Route;
 
@@ -75,6 +76,12 @@ Route::put("/positions/{position}", [PositionController::class, 'update'])->name
 Route::get("/display/positions", function() {
     return view('position.display_position');
 });
+
+//Attendances's route
+Route::get('/display/attendances', function() {
+    return view('attendance.display_attendance');
+});
+
 
 //Dashboard
 Route::get('/', function() {
