@@ -1,29 +1,47 @@
+# PHP Service
 FROM php:8.2 as php
 
-RUN apt-get update -y
-RUN apt-get install -y unzip libpq-dev libcurl4-gnutls-dev
-RUN docker-php-ext-install pdo pdo_mysql bcmath
+# Install dependencies
+RUN apt-get update -y \
+    && apt-get install -y unzip libpq-dev libcurl4-gnutls-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN pecl install -o -f redis \
-    && rm -rf /tmp/pear \
+# Install PHP extensions
+RUN docker-php-ext-install pdo pdo_mysql bcmath \
+    && pecl install -o -f redis \
     && docker-php-ext-enable redis
 
+# Set working directory
 WORKDIR /var/www
+
+# Copy application files
 COPY . .
 
+# Copy Composer binary from Composer image
 COPY --from=composer:2.3.5 /usr/bin/composer /usr/bin/composer
 
+# Set environment variables
 ENV PORT=8100
-ENTRYPOINT [ "docker/entrypoint.sh" ]
+
+# Set entrypoint script
+COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
 # ==============================================================================
-#  node
+# Node.js Service
 FROM node:14-alpine as node
 
+# Set working directory
 WORKDIR /var/www
+
+# Copy application files
 COPY . .
 
-RUN npm install --global cross-env
-RUN npm install
+# Install Node.js dependencies
+RUN npm install --global cross-env \
+    && npm install
 
+# Define volume for Node.js modules
 VOLUME /var/www/node_modules
