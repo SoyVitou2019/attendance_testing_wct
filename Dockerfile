@@ -1,37 +1,43 @@
-# PHP Service
-FROM php:8.2 as php
+# Use the official PHP 7.4 image as base
+FROM php:7.4-fpm
 
-# Install dependencies
-RUN apt-get update -y \
-    && apt-get install -y unzip libpq-dev libcurl4-gnutls-dev \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+# Set the working directory in the container
+WORKDIR /var/www/html
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    libzip-dev \
+    zip \
+    unzip \
+    curl \
+    libonig-dev \
+    libxml2-dev \
+    nano \
+    git
+
+# Clear cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
-RUN docker-php-ext-install pdo pdo_mysql bcmath \
-    && pecl install -o -f redis \
-    && docker-php-ext-enable redis
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install gd mysqli pdo pdo_mysql zip mbstring exif pcntl bcmath opcache
 
-# Set working directory
-WORKDIR /var/www
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Copy application files
+# Copy existing application directory contents to the working directory
 COPY . .
 
-# Copy Composer binary from Composer image
-COPY --from=composer:1.29.2 /usr/bin/composer /usr/bin/composer
+# Install composer dependencies
+RUN composer install
 
-# Set environment variables
-ENV PORT=8100
+# Change permissions
+RUN chown -R www-data:www-data /var/www/html
+RUN chmod -R 755 /var/www/html/storage
 
-# Set entrypoint script
-RUN chmod +x entrypoint.sh
-ENTRYPOINT ["/entrypoint.sh"]
-
-
-# Set working directory
-WORKDIR /var/www
-
-# Copy application files
-COPY . .
-
+# Expose port 8000 and start php-fpm server
+EXPOSE 8100
+CMD ["php-fpm"]
