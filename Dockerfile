@@ -3,7 +3,7 @@ FROM php:8.2.18-zts-bullseye
 # Set environment variables for Composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV COMPOSER_HOME=/composer
-RUN php artisan key:generate
+
 # Install system dependencies
 RUN apt-get update \
     && apt-get install -y \
@@ -19,6 +19,9 @@ WORKDIR /var/www/html
 
 # Copy application files
 COPY . .
+
+# Generate application key
+RUN php artisan key:generate
 
 # Run Composer install
 RUN composer install --no-plugins --no-scripts
