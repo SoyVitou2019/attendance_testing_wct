@@ -1,14 +1,27 @@
 FROM php:8.2.18-zts-bullseye
 
+# Set working directory
 WORKDIR /var/www/html
 
-RUN apk update 
-RUN curl -sS https://getcomposer.org/installer \
- | php -- --version=1.10.26 \
- --install-dir=/usr/local/bin --filename=composer
+# Update package lists
+RUN apt-get update && apt-get install -y \
+    git \
+    unzip \
+    libzip-dev \
+    && docker-php-ext-install zip \
+    && rm -rf /var/lib/apt/lists/*
 
- COPY . .
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer --version=2.1.8
 
- RUN composer install
+# Copy application files
+COPY . .
 
- CMD ["php","artisan","serve","--host=0.0.0.0"]
+# Install project dependencies
+RUN composer install --no-dev --optimize-autoloader
+
+# Expose port 8000 to the outside world
+EXPOSE 8100
+
+# Command to run the application
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8100"]
