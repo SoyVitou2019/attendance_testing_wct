@@ -19,7 +19,7 @@ WORKDIR /var/www
 COPY . .
 
 # Copy Composer binary from Composer image
-COPY --from=composer:2.3.5 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:1.29.2 /usr/bin/composer /usr/bin/composer
 
 # Set environment variables
 ENV PORT=8100
