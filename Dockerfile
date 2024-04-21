@@ -28,9 +28,6 @@ ENV PORT=8100
 RUN chmod +x entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
 
-# ==============================================================================
-# Node.js Service
-FROM node:14-alpine as node
 
 # Set working directory
 WORKDIR /var/www
@@ -38,9 +35,3 @@ WORKDIR /var/www
 # Copy application files
 COPY . .
 
-# Install Node.js dependencies
-RUN npm install --global cross-env \
-    && npm install
-
-# Define volume for Node.js modules
-VOLUME /var/www/node_modules
