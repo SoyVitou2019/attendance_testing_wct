@@ -17,10 +17,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # Copy application files
 COPY . .
 
-# Install project dependencies
-RUN composer install
-
-# Expose port 8000 to the outside world
+# Expose port 8100 to the outside world
 EXPOSE 8100
 
 # Command to run the application
