@@ -20,11 +20,11 @@ WORKDIR /var/www/html
 # Copy application files
 COPY . .
 
+# Run Composer install first
+RUN composer install --no-plugins --no-scripts
+
 # Generate application key
 RUN php artisan key:generate
-
-# Run Composer install
-RUN composer install --no-plugins --no-scripts
 
 # Expose port if needed
 EXPOSE 81
