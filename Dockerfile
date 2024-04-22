@@ -1,26 +1,50 @@
-FROM ubuntu:latest
+FROM php:7.2-fpm
 
-WORKDIR /var/www/html
+# Copy composer.lock and composer.json
+COPY composer.lock composer.json /var/www/
 
-# Update package lists and install prerequisites
-RUN apt update && apt install -y curl
+WORKDIR /var/www
 
-# Set the timezone to avoid interactive prompts
-ENV DEBIAN_FRONTEND=noninteractive
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpng-dev \
+    libjpeg62-turbo-dev \
+    libfreetype6-dev \
+    locales \
+    zip \
+    jpegoptim optipng pngquant gifsicle \
+    vim \
+    unzip \
+    git \
+    curl
 
-# Install PHP version and tzdata package to auto-select timezone
-RUN apt install -y php tzdata
+# Clear cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
 
 # Install PHP extensions
 RUN apt install -y php8.1-cli php8.1-xml php8.1-curl php8.1-mbstring php8.1-tokenizer php8.1-fileinfo
 
-# Install Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --version=1.10.26 --install-dir=/usr/local/bin --filename=composer
+# Install composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Copy your Laravel application files into the container
-COPY . .
 
-# Install Composer dependencies
+# Add user for laravel application
+RUN groupadd -g 1000 www
+RUN useradd -u 1000 -ms /bin/bash -g www www
+
+
+# Copy existing application directory contents
+COPY . /var/www
+
+# Copy existing application directory permissions
+COPY --chown=www:www . /var/www
+
+# Change current user to www
+USER www
+
+# composer install
 RUN composer install
 
 # Generate Laravel application key
