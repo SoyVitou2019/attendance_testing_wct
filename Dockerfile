@@ -23,13 +23,18 @@ COPY . .
 
 # Install Composer and dependencies
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Switch to a non-root user
+USER www-data
+
+# Install Composer dependencies
 RUN composer install --no-plugins --no-scripts
 
 # Generate Laravel application key
 RUN php artisan key:generate
 
 # Expose port (if needed)
-EXPOSE 80
+EXPOSE 81
 
 # CMD or ENTRYPOINT instructions here if needed
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=80"]
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=81"]
