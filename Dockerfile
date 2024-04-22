@@ -1,5 +1,6 @@
 FROM ubuntu:latest
 
+RUN COMPOSER_ALLOW_SUPERUSER=1
 # Update package lists and install prerequisites
 RUN apt update && \
     apt install -y curl software-properties-common
@@ -25,7 +26,7 @@ COPY . .
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Install Composer dependencies
-RUN composer install --no-plugins --no-scripts --prefer-dist --no-interaction --ignore-platform-reqs
+RUN composer install --no-plugins --no-scripts --no-interaction
 
 # Generate Laravel application key
 RUN php artisan key:generate
