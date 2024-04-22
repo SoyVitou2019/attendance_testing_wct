@@ -1,12 +1,10 @@
 FROM ubuntu:latest
 
-
 WORKDIR /var/www/html
 
-RUN COMPOSER_ALLOW_SUPERUSER=1
 # Update package lists and install prerequisites
 RUN apt update && \
-    apt install -y curl software-properties-common
+    apt install -y curl software-properties-common git
 
 # Add repository for PHP
 RUN add-apt-repository ppa:ondrej/php -y && \
@@ -18,9 +16,9 @@ RUN apt install -y php8.3-fpm php8.3-cli php8.3-xml php8.3-curl php8.3-mbstring 
 # Clean up
 RUN apt autoremove -y && \
     apt clean
-    
+
 # Install Composer
-RUN RUN curl -sS https://getcomposer.org/installer | php -- --version=1.10.26 --install-dir=/usr/local/bin --filename=composer
+RUN curl -sS https://getcomposer.org/installer | php -- --version=1.10.26 --install-dir=/usr/local/bin --filename=composer
 
 # Copy your Laravel application files into the container
 COPY . .
