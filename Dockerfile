@@ -4,6 +4,8 @@ FROM php:8.2.18-zts-bullseye
 ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV COMPOSER_HOME=/composer
 
+RUN composer self-update --2
+
 # Install system dependencies
 RUN apt-get update \
     && apt-get install -y \
