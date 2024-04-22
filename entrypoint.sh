@@ -24,7 +24,7 @@ if [ "$role" = "app" ]; then
     php artisan cache:clear
     php artisan config:clear
     php artisan route:clear
-    php artisan serve --host=0.0.0.0 --port=80
+    php artisan serve --host=0.0.0.0 --port=81
 else
     # Else, execute whatever other command needed
     exec "$@"

@@ -1,33 +1,33 @@
-FROM php:8.2.18-zts-bullseye
+FROM ubuntu:latest
 
-# Set environment variables for Composer
-ENV COMPOSER_ALLOW_SUPERUSER=1
-ENV COMPOSER_HOME=/composer
+RUN apt update
 
-# Install system dependencies
-RUN apt-get update \
-    && apt-get install -y \
-        git \
-        zip \
-        unzip
+# install curl for download composer
+RUN apt install curl -y
+RUN apt-get install -y software-properties-common
+RUN add-apt-repository ppa:ondrej/php -y
+RUN apt-get update
 
-# Install Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
-    && ln -s /usr/local/bin/composer /usr/bin/composer
+# install php version 8.1
+RUN apt install php -y
 
-# Set the working directory
-WORKDIR /var/www
+# install php extensions
+RUN apt install php-cli unzip
+RUN apt install php8.3-ctype php8.3-curl php8.3-dom php8.3-fileinfo
+RUN apt install -y php8.3-mbstring
+RUN apt install php8.3-pdo php8.3-tokenizer php8.3-xml
 
-# Copy application files
-COPY . .
+# install composer
+RUN curl -sS https://getcomposer.org/installer -o /tmp/composer-setup.php
+RUN HASH=`curl -sS https://composer.github.io/installer.sig`
+RUN php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer
 
-# Run Composer install
-RUN composer install --no-progress --no-interaction
+COPY . ./laravel_project
 
-# Expose port if needed (assuming your application needs a specific port)
+RUN composer install --no-plugins --no-scripts
+
+RUN php artisan key:generate
+
 EXPOSE 81
 
-# Set entrypoint
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-ENTRYPOINT ["/entrypoint.sh"]
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=81"]
