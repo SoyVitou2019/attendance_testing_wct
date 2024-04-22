@@ -15,19 +15,18 @@ RUN apt-get update \
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Set the working directory
-WORKDIR /var/www/html
+WORKDIR /var/www
 
 # Copy application files
 COPY . .
 
-# Run Composer install first
-RUN composer install --no-plugins --no-scripts
+# Run Composer install
+RUN composer install --no-progress --no-interaction
 
-# Generate application key
-RUN php artisan key:generate
+# Expose port if needed (assuming your application needs a specific port)
+EXPOSE 80
 
-# Expose port if needed
-EXPOSE 81
-
-# Define the command to run the application
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=81"]
+# Set entrypoint
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
