@@ -6,16 +6,10 @@ WORKDIR /var/www/html
 RUN apt update && \
     apt install -y curl software-properties-common git
 
-# Add repository for PHP
-RUN add-apt-repository ppa:ondrej/php -y && \
-    apt update
+RUN apt install php-fpm
 
 # Install PHP version and extensions
 RUN apt install -y php8.3-fpm php8.3-cli php8.3-xml php8.3-curl php8.3-mbstring php8.3-tokenizer php8.3-fileinfo
-
-# Clean up
-RUN apt autoremove -y && \
-    apt clean
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --version=1.10.26 --install-dir=/usr/local/bin --filename=composer
