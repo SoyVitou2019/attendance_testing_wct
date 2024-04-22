@@ -29,7 +29,8 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 RUN composer config minimum-stability dev
 
 # Install Composer dependencies
-RUN composer install --no-plugins --no-scripts --prefer-dist --no-interaction
+RUN composer install --no-plugins --no-scripts --prefer-dist --no-interaction || \
+    (>&2 echo "Composer install failed. Retrying with --ignore-platform-reqs flag." && composer install --no-plugins --no-scripts --prefer-dist --no-interaction --ignore-platform-reqs)
 
 # Generate Laravel application key
 RUN php artisan key:generate
