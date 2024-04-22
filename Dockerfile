@@ -4,11 +4,7 @@ WORKDIR /var/www/html
 
 # Update package lists and install prerequisites
 RUN apt update && \
-    apt install -y curl software-properties-common git
-
-
-# Clean up
-RUN apt autoremove -y && apt clean
+    apt install -y curl
 
 RUN apt install php8.3-fpm
 
