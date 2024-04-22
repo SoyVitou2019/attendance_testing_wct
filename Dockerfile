@@ -1,5 +1,9 @@
 FROM ubuntu:latest
 
+
+WORKDIR /var/www/html
+
+RUN COMPOSER_ALLOW_SUPERUSER=1
 # Update package lists and install prerequisites
 RUN apt update && \
     apt install -y curl software-properties-common
@@ -14,25 +18,15 @@ RUN apt install -y php8.3-fpm php8.3-cli php8.3-xml php8.3-curl php8.3-mbstring 
 # Clean up
 RUN apt autoremove -y && \
     apt clean
-
-# Create a new user
-RUN useradd -ms /bin/bash laravel_user
-
-# Set up your application directory and permissions
-WORKDIR /home/laravel_project
-RUN chown -R laravel_user:laravel_user /home/laravel_project
-
-# Switch to the new user
-USER laravel_user
+    
+# Install Composer
+RUN RUN curl -sS https://getcomposer.org/installer | php -- --version=1.10.26 --install-dir=/usr/local/bin --filename=composer
 
 # Copy your Laravel application files into the container
 COPY . .
 
-# Install Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/home/laravel_project/bin --filename=composer
-
 # Install Composer dependencies
-RUN php /home/laravel_project/bin/composer install --no-plugins --no-scripts --no-interaction
+RUN composer install
 
 # Generate Laravel application key
 RUN php artisan key:generate
