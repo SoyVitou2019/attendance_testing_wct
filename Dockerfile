@@ -5,11 +5,13 @@ WORKDIR /var/www/html
 # Update package lists and install prerequisites
 RUN apt update && apt install -y curl
 
+# Set the timezone to avoid interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
 
+# Install PHP version and tzdata package to auto-select timezone
 RUN apt install -y php8.3 tzdata
 
-# Install PHP version and extensions
+# Install PHP extensions
 RUN apt install -y php8.3-cli php8.3-xml php8.3-curl php8.3-mbstring php8.3-tokenizer php8.3-fileinfo
 
 # Install Composer
