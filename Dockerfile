@@ -22,15 +22,10 @@ WORKDIR /home/laravel_project
 COPY . .
 
 # Install Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
-    composer self-update
-
-# Set minimum stability to dev temporarily
-RUN composer config minimum-stability dev
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Install Composer dependencies
-RUN composer install --no-plugins --no-scripts --prefer-dist --no-interaction || \
-    (>&2 echo "Composer install failed. Retrying with --ignore-platform-reqs flag." && composer install --no-plugins --no-scripts --prefer-dist --no-interaction --ignore-platform-reqs)
+RUN composer install --no-plugins --no-scripts --prefer-dist --no-interaction --ignore-platform-reqs
 
 # Generate Laravel application key
 RUN php artisan key:generate
