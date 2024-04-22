@@ -24,7 +24,7 @@ COPY . .
 RUN composer install --no-progress --no-interaction
 
 # Expose port if needed (assuming your application needs a specific port)
-EXPOSE 80
+EXPOSE 81
 
 # Set entrypoint
 COPY entrypoint.sh /entrypoint.sh
