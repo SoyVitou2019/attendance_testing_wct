@@ -6,6 +6,10 @@ WORKDIR /var/www/html
 RUN apt update && \
     apt install -y curl software-properties-common git
 
+
+# Clean up
+RUN apt autoremove -y && apt clean
+
 RUN apt install php8.3-fpm
 
 # Install PHP version and extensions
