@@ -5,7 +5,9 @@ WORKDIR /var/www/html
 # Update package lists and install prerequisites
 RUN apt update && apt install -y curl
 
-RUN apt install php -y
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt install -y php tzdata
 
 # Install PHP version and extensions
 RUN apt install -y php8.3-cli php8.3-xml php8.3-curl php8.3-mbstring php8.3-tokenizer php8.3-fileinfo
