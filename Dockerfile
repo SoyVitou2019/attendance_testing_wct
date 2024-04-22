@@ -4,8 +4,6 @@ FROM php:8.2.18-zts-bullseye
 ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV COMPOSER_HOME=/composer
 
-RUN composer self-update --2
-
 # Install system dependencies
 RUN apt-get update \
     && apt-get install -y \
@@ -14,7 +12,8 @@ RUN apt-get update \
         unzip
 
 # Install Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
+    && ln -s /usr/local/bin/composer /usr/bin/composer
 
 # Set the working directory
 WORKDIR /var/www
