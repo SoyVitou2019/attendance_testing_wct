@@ -47,7 +47,7 @@ COPY --chown=www:www . /var/www
 USER www
 
 # composer install
-RUN composer install
+# RUN composer install
 
 # Generate Laravel application key
 RUN php artisan key:generate
