@@ -16,19 +16,14 @@ RUN apt autoremove -y && \
     apt clean
 
 # Set up your application
-WORKDIR /var/www/html
+WORKDIR /home/laravel_project
 
 # Copy your Laravel application files into the container
 COPY . .
 
 # Install Composer and dependencies
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-# Switch to a non-root user
-USER www-data
-
-# Install Composer dependencies
-RUN composer install --no-plugins --no-scripts
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
+    composer install --no-plugins --no-scripts --prefer-dist --no-interaction
 
 # Generate Laravel application key
 RUN php artisan key:generate
