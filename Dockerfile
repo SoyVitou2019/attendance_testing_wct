@@ -13,7 +13,8 @@ RUN apt install php-fpm -y
 
 # install php extensions
 RUN apt install php-cli unzip
-RUN apt install php-ctype php-curl php-dom php-fileinfo
+RUN apt install -y php-fpm
+RUN apt install -y php-ctype php-curl php-dom php-fileinfo
 RUN apt install -y php-mbstring
 RUN apt install php-pdo php-tokenizer php-xml
 
