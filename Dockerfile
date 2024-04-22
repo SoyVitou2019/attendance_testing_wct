@@ -9,10 +9,10 @@ RUN apt update && apt install -y curl
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install PHP version and tzdata package to auto-select timezone
-RUN apt install -y php8.3 tzdata
+RUN apt install -y php tzdata
 
 # Install PHP extensions
-RUN apt install -y php8.3-cli php8.3-xml php8.3-curl php8.3-mbstring php8.3-tokenizer php8.3-fileinfo
+RUN apt install -y php8.1-cli php8.1-xml php8.1-curl php8.1-mbstring php8.1-tokenizer php8.1-fileinfo
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --version=1.10.26 --install-dir=/usr/local/bin --filename=composer
