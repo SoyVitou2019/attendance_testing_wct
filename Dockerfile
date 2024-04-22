@@ -1,27 +1,35 @@
 FROM ubuntu:latest
 
+# Update package lists and install prerequisites
 RUN apt update && \
-    apt install -y curl software-properties-common && \
-    add-apt-repository ppa:ondrej/php -y && \
-    apt update && \
-    apt install -y php-fpm php-cli unzip php-ctype php-curl php-dom php-fileinfo php-mbstring php-pdo php-tokenizer php-xml
+    apt install -y curl software-properties-common
 
-# Install Composer
-RUN curl -sS https://getcomposer.org/installer -o /tmp/composer-setup.php && \
-    HASH=`curl -sS https://composer.github.io/installer.sig` && \
-    php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer
+# Add repository for PHP
+RUN add-apt-repository ppa:ondrej/php -y && \
+    apt update
 
-# Copy Laravel project files
-COPY . /laravel_project
+# Install PHP version and extensions
+RUN apt install -y php8.3-fpm php8.3-cli php8.3-xml php8.3-curl php8.3-mbstring php8.3-tokenizer php8.3-fileinfo
 
-# Install dependencies
-RUN cd /laravel_project && \
-    composer install --no-plugins --no-scripts
+# Clean up
+RUN apt autoremove -y && \
+    apt clean
+
+# Set up your application
+WORKDIR /var/www/html
+
+# Copy your Laravel application files into the container
+COPY . .
+
+# Install Composer and dependencies
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN composer install --no-plugins --no-scripts
 
 # Generate Laravel application key
-RUN cd /laravel_project && \
-    php artisan key:generate
+RUN php artisan key:generate
 
-EXPOSE 81
+# Expose port (if needed)
+EXPOSE 80
 
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=81"]
+# CMD or ENTRYPOINT instructions here if needed
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=80"]
