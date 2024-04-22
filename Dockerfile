@@ -8,14 +8,14 @@ RUN apt-get install -y software-properties-common
 RUN add-apt-repository ppa:ondrej/php -y
 RUN apt-get update
 
-# install php version 8.1
-RUN apt install php -y
+# install php version fpm
+RUN apt install php-fpm -y
 
 # install php extensions
 RUN apt install php-cli unzip
-RUN apt install php8.3-ctype php8.3-curl php8.3-dom php8.3-fileinfo
-RUN apt install -y php8.3-mbstring
-RUN apt install php8.3-pdo php8.3-tokenizer php8.3-xml
+RUN apt install php-ctype php-curl php-dom php-fileinfo
+RUN apt install -y php-mbstring
+RUN apt install php-pdo php-tokenizer php-xml
 
 # install composer
 RUN curl -sS https://getcomposer.org/installer -o /tmp/composer-setup.php
