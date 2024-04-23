@@ -1,14 +1,19 @@
-FROM php:8.3.6-zts-bullseye
+FROM ubuntu:latest
 
 WORKDIR /laravel_project
-ENV COMPOSER_ALLOW_SUPERUSER=1
+
 # Install dependencies
 RUN apt -y update 
 RUN apt -y upgrade
-RUN apt install -y curl git
+RUN apt install -y zip unzip git curl
 
-# # install php
-# ENV DEBIAN_FRONTEND=noninteractive
+# install php
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get install ca-certificates apt-transport-https software-properties-common -y
+RUN add-apt-repository ppa:ondrej/php
+RUN apt update
+# RUN apt-get install -y tzdata
+RUN apt-get install -y php
 
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
@@ -16,10 +21,10 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # Copy existing application directory contents
 COPY . ./laravel_project
 
-RUN rm ./laravel_project/composer.lock
+RUN rm -r vendor
 
 # composer install
-RUN composer install
+RUN composer update --no-scripts
 
 # Generate Laravel application key
 RUN php artisan key:generate
