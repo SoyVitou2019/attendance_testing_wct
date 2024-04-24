@@ -2,6 +2,7 @@ FROM ubuntu:latest
 
 WORKDIR /laravel_project
 
+COPY composer.json /laravel_project/
 # Install dependencies
 RUN apt -y update 
 RUN apt -y upgrade
