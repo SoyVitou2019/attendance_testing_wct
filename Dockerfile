@@ -14,7 +14,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 COPY . .
 
 # Install PHP extensions, if needed
-# RUN docker-php-ext-install pdo pdo_mysql ...
+RUN docker-php-ext-install pdo pdo_mysql
 
 # Install Composer dependencies
 COPY composer.json /laravel_project/
@@ -23,7 +23,6 @@ RUN composer install --no-scripts
 # Copy artisan file
 COPY artisan /laravel_project/artisan
 COPY .env /laravel_project/.env
-
 # Generate key
 RUN php artisan key:generate
 RUN php artisan cache:clear
