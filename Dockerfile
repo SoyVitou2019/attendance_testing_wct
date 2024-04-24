@@ -22,6 +22,7 @@ RUN composer install --no-scripts
 
 # Copy artisan file
 COPY artisan /laravel_project/artisan
+COPY .env /laravel_project/.env
 
 # Generate key
 RUN php artisan key:generate
