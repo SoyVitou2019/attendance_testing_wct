@@ -26,6 +26,10 @@ COPY .env /laravel_project/.env
 
 # Generate key
 RUN php artisan key:generate
+RUN php artisan cache:clear
+RUN php artisan view:clear
+RUN php artisan route:clear
+
 
 # Expose port
 EXPOSE 81
